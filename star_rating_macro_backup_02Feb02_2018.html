@@ -1,0 +1,51 @@
+<% registerMacro('starRating', function (options) {
+
+	var fill_value = options.fillRounded ? Math.round(options.value * 2) / 2 : options.value
+	,	filled_by = fill_value * 100 / options.max
+	,	i
+	,	reviews_enabled = SC.ENVIRONMENT.REVIEWS_CONFIG && SC.ENVIRONMENT.REVIEWS_CONFIG.enabled
+    ,   ratingCount = options.ratingCount > 0 ? options.ratingCount : 1
+    ,   ratingValue = options.value > 0 ? options.value : 5;
+
+	if (reviews_enabled === true)
+	{
+	
+%>
+<a href="#" onclick="document.getElementById('item-product-reviews').scrollIntoView(true);">
+<div class="rating <%= options.className %>">
+	<% if (options.label) { %>
+		<span class="rating-label">
+			<%= options.label %>
+		</span>
+	<% } %>
+	<div class="rating-area" data-toggle='rater' data-name="<%= options.name %>" data-max="<%= options.max %>" data-value="<%= options.value %>">
+		<meta itemprop="bestRating" content="<%= options.max %>">
+		<meta itemprop="worstRating" content="1">
+		<div class="rating-area-fill" data-toggle='ratting-component-fill' style="width: <%= filled_by %>%">
+		</div>
+		<% if (options.writeMode) { %>
+			<% for (i = 1; i <= options.max; i++) { %>
+				<button type="button" data-action="rate" name="<%= options.name %>" value="<%= i %>"></button>
+			<% } %>
+		<% } %>
+		<div class="clearfix"></div>
+	</div>
+	<% if (options.showValue) { %>
+		<span class="rating-value" itemprop="ratingValue">
+			<%= ratingValue %>
+		</span>
+	<% } else { %>
+		<meta itemprop="ratingValue" content="<%= ratingValue %>">
+	<% } %>
+	<div class="clearfix"></div>
+</div>
+</a>
+<% if (options.showRatingCount) { %>
+	<span class="review-total">
+		<%= _('($(0))').translate(
+			'<span itemprop="reviewCount">' + ratingCount + '</span>'
+		) %>
+	</span>
+<% } %>
+
+<% }}) %>
